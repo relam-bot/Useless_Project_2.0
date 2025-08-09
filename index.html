@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Late Comer Excuse Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 10px; }
+    h1 { text-align: center; }
+    .roles {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    button.role-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #eee;
+      transition: background 0.3s;
+    }
+    button.role-btn:hover {
+      background: #ddd;
+    }
+    button.role-btn.active {
+      background: #007BFF;
+      color: white;
+      border-color: #0056b3;
+    }
+    #generateBtn {
+      display: block;
+      margin: 0 auto 20px auto;
+      padding: 10px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background: #28a745;
+      color: white;
+      transition: background 0.3s;
+    }
+    #generateBtn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #generateBtn:hover:not(:disabled) {
+      background: #218838;
+    }
+    #result {
+      white-space: pre-wrap;
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 6px;
+      min-height: 100px;
+      font-size: 16px;
+      text-align: left;
+      overflow-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Late Comer Excuse Generator</h1>
+  
+  <div class="roles">
+    <button class="role-btn" data-role="student">Student</button>
+    <button class="role-btn" data-role="worker">Worker</button>
+    <button class="role-btn" data-role="girlfriend">Girlfriend</button>
+    <button class="role-btn" data-role="friend">Friend</button>
+  </div>
+  
+  <button id="generateBtn" disabled>Generate Excuse</button>
+  <div id="result">Select a role above, then click "Generate Excuse".</div>
+
+  <script>
+    const roleButtons = document.querySelectorAll('.role-btn');
+    const generateBtn = document.getElementById('generateBtn');
+    const resultDiv = document.getElementById('result');
+    let selectedRole = null;
+
+    roleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        roleButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        selectedRole = button.getAttribute('data-role');
+        generateBtn.disabled = false;
+        resultDiv.textContent = `Role selected: ${selectedRole}. Now click "Generate Excuse".`;
+      });
+    });
+
+    generateBtn.addEventListener('click', async () => {
+      if (!selectedRole) return;
+      resultDiv.textContent = `Generating excuse for ${selectedRole}, please wait...`;
+
+      try {
+        const response = await fetch("http://localhost:8000/generateExcuse", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: selectedRole })
+        });
+
+        if (!response.ok) {
+          resultDiv.textContent = `Failed to fetch excuse: HTTP error! Status: ${response.status}`;
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          resultDiv.textContent = `Error: ${data.error}`;
+          return;
+        }
+
+        let excuseText = data.excuse + "\n\n";
+        excuseText += "Location: " + data.location.city + ", " + data.location.region + ", " + data.location.country + "\n";
+        excuseText += `Weather: ${data.weather.condition}, Temp: ${data.weather.temperature_c}°C, Humidity: ${data.weather.humidity}%, Wind: ${data.weather.wind_kph} kph\n`;
+        excuseText += `Time Info: ${data.time_info.weekday}, ${data.time_info.time_period} (Hour: ${data.time_info.hour})\n`;
+        excuseText += "Public Transport Status: " + data.public_transport_status.status + " (" + data.public_transport_status.note + ")\n";
+        excuseText += "Recent News Headlines:\n";
+        data.news_headlines.forEach((article, i) => {
+          excuseText += `${i + 1}. ${article.title} (Source: ${article.source})\n`;
+        });
+
+        resultDiv.textContent = excuseText;
+
+      } catch (err) {
+        resultDiv.textContent = "Error fetching excuse: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
