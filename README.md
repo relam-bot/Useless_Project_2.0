@@ -26,36 +26,16 @@ For Software:
 Python
 Api for gemini,news,whether etc
 HTML
+Json
 Ai Python Integration
 
-
-### Implementation
-For Software:
-# Installation
-[commands]
-
 # Run
-[commands]
-
-### Project Documentation
-For Software:
-
-# Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
-
+To run the Code you have to setup your FastAPI server normally on your local machine and run the index.html.You will also need the API keys as i cant publish mine openenly.This code works just need the right environment but as i couldnt host it in github due to this API issue .i hope it doesnt leave a negative review. 
 
 ### Project Demo
 # Video
-[Add your demo video link here]
-*Explain what the video demonstrates*
-
+https://drive.google.com/drive/folders/1GffCpMswn3en11DfQx6dYpTijizJ1owZ?usp=sharing
+The above video demonstrates the working model.The Full code couldnt be published because it contains API keys which cant be shared.The demo shows how the execuse will be generated based on ur ip.The code will learn ur location,recent news ,whether and time and generate execuse based on but as it couldnt be hosted the ip i showed in demo is the default ip addresss.some images may show i couldnt find execuse which is due to reaching the daily limit of the APIs.I hope u understand how hard it was to build it using completely zero cost.
 
 ## Team Contributions
 - [Joseph Mathew]: [Python Ai Integration]
